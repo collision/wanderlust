@@ -20,8 +20,13 @@ class Wanderlust
   end
 
   def load_flights
-    results = @api.scheduled(ScheduledRequest.new(@airport, @number, '', 0))
-    results.scheduledResult.scheduled
+    iterations = ((@number - 1) / 15) + 1
+    results = []
+    iterations.times {|iteration|
+      offset = (iteration-1)*15
+      results += @api.scheduled(ScheduledRequest.new(@airport, 15, '', offset)).scheduledResult.scheduled
+    }
+    results
   end
 
   def flight_row(flight)
