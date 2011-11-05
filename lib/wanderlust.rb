@@ -24,17 +24,34 @@ class Wanderlust
     results.scheduledResult.scheduled
   end
 
-  def pretty_flight(flight)
-    (<<-EOF).gsub("\n", ' ')
-#{Time.at(flight.filed_departuretime).strftime('%b %d %H:%M')}:
-#{airline_name(flight.ident)}
-#{flight.aircrafttype}
-#{flight.destinationName}
-EOF
+  def flight_row(flight)
+    [
+      Time.at(flight.filed_departuretime).strftime('%b %d %H:%M'),
+      flight.destinationName,
+      airline_name(flight.ident),
+      flight.aircrafttype]
+  end
+
+  def generate_printstring(flight_rows)
+    # Find the appropriate column widths
+    num_of_columns = flight_rows.first.length
+    column_widths = (0..num_of_columns-1).to_a.map do |index|
+      cell_lengths = flight_rows.map {|row| row[index] ? row[index].length : 0}
+      cell_lengths.max
+    end
+
+    column_widths.map{|width| "%-#{width}s"}.join('  ')
+  end
+
+  def print_flights(flights)
+    flight_rows = flights.map {|flight| flight_row(flight)}
+    printstring = generate_printstring(flight_rows)
+
+    flight_rows.each {|row| puts printstring % row }
   end
 
   def find
     flights = load_flights
-    flights.each {|flight| puts pretty_flight(flight)}
+    print_flights(flights)
   end
 end
