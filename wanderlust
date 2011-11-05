@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require File.join(File.dirname(__FILE__), 'lib/wanderlust.rb')
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ./wanderlust airportcode [options]"
+
+  # Not supported yet
+  # opts.on("-n", nil, "Number of results (default is 15)") do |v|
+  #   options[:number] = v
+  # end
+end.parse!
+
+Wanderlust.new(ARGV.first, options).find

@@ -1,0 +1,3 @@
+* Use FlightXML REST API rather than this Ruby client monstrosity
+* Support IATA airport identifiers
+* More descriptive destination names
